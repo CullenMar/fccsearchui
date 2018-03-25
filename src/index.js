@@ -6,7 +6,12 @@ import $ from "jquery";
 class UserListComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {person: []};
+    this.state = {
+      userName: null,
+      userProfImg: null,
+      userLoc: null,
+      
+    };
   }
   
   componentDidMount() {
@@ -17,16 +22,18 @@ class UserListComponent extends React.Component {
     $.getJSON('http://fcc-profile-scraper.herokuapp.com/user/user512')
       .done(function(data){
         console.log(data);
-      });
-    
-    //  .then(({ results }) => this.setState({ person: results }));
+        this.setState({
+          userName: data.name,
+          userProfImg: data.profileImage,
+          userLoc: data.location
+        });
+      }.bind(this));
   }
   
   render() {
-
-
     return (
       <div id="layout-content" className="layout-content-wrapper">
+        <div className="panel-list">{ this.state.userName + " " + this.state.userLoc }</div>
       </div>
     );
   }
