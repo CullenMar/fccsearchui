@@ -1,0 +1,17 @@
+.message {
+    font-weight: bold;
+}
+
+.imgs {
+    height: 100px;
+    
+}
+
+.studentTable {
+    width: 700px;
+    text-align: left;
+}
+
+#layout-content {
+    font-size : 24px;
+}
