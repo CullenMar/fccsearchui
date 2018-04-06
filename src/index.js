@@ -19,6 +19,7 @@ class UserListComponent extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.scraperSearch = this.scraperSearch.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
   }
   
   handleChange(e) {
@@ -36,6 +37,7 @@ class UserListComponent extends React.Component {
           userLoc: data.location,
           msg: '',
           studentList: [...this.state.studentList, data],
+          textVal: '',
         });
     }.bind(this)).fail(function() {
       this.setState({
@@ -43,7 +45,7 @@ class UserListComponent extends React.Component {
         userProfImg: '',
         userLoc: '',
         msg: input + ' does not exist.',
-      })
+      });
     }.bind(this));
   }
   
@@ -52,6 +54,16 @@ class UserListComponent extends React.Component {
       event.preventDefault();
       this.scraperSearch();
     }
+  }
+  
+  //removes a student located at position x
+  handleRemove(x) {
+    console.log(x);
+    let tempArray = this.state.studentList;
+    tempArray.splice(x, 1);
+    this.setState({
+      studentList: tempArray,
+    });
   }
   
   //create the html
@@ -66,7 +78,7 @@ class UserListComponent extends React.Component {
           </label>
           <input type="button" value="SEARCH" onClick={this.scraperSearch}/>
           <br />
-          <DisplayUser userData={this.state.studentList} userNameD={this.state.userName} userProfImgD={this.state.userProfImg} userLocD={this.state.userLoc} />
+          <DisplayUser userData={this.state.studentList} actionDelete={this.handleRemove}/>
         </form>
       </div>
     );
@@ -74,28 +86,17 @@ class UserListComponent extends React.Component {
 }
 
 class DisplayUser extends React.Component {
-  constructor(props) {
-    super(props);
-    this.htmlStuff = '';
-    this.htmlTest = "<tr> <td>Smill Smates</td> <td>stuff3</td> <td>stuff4</td> </tr>";
-  }
-  
-  handleRemove(x) {
-    
-  }
   
   render() {
     let rows = [];
-    let counter = 0;
-    console.log(this.props.userData.length);
+    var counter = 0;
     while (this.props.userData.length > counter) {
-      this.htmlStuff = this.htmlStuff + "<tbody><tr><td>" + this.props.userData[counter].name + "</td><td>" + this.props.userData[counter].profileImage + "</td><td>" + this.props.userData[counter].location + "</td></tr></tbody>";
       let cell = [];
-      cell.push(<td>{this.props.userData[counter].name}</td>);
-      cell.push(<td><img className ="imgs" src={this.props.userData[counter].profileImage} alt="Unavailable" /></td>);
-      cell.push(<td>{this.props.userData[counter].location}</td>);
-      cell.push(<td><input type="button" value="Remove" onClick={this.handleRemove(counter)}/></td>);
-      rows.push(<tr>{cell}</tr>);
+      cell.push(<td key={0}>{this.props.userData[counter].name}</td>);
+      cell.push(<td key={1}><img className ="imgs" src={this.props.userData[counter].profileImage} alt="Unavailable" /></td>);
+      cell.push(<td key={2}>{this.props.userData[counter].location}</td>);
+      cell.push(<td key={3}><input type="button" value="Remove" onClick={() => this.props.actionDelete(counter)}/></td>);
+      rows.push(<tr key={counter}>{cell}</tr>);
       counter = counter + 1;
     }
     return (
